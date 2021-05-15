@@ -1,0 +1,29 @@
+{
+  "name": "binit",
+  "version": "1.0.0",
+  "description": "A CLI to create my projects",
+  "main": "src/index.js",
+  "bin": {
+    "@brendamatias/create-project": "bin/create-project",
+    "create-project": "bin/create-project"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "cli",
+    "create-project"
+  ],
+  "author": "Brenda Matias",
+  "license": "ISC",
+  "dependencies": {
+    "arg": "^5.0.0",
+    "chalk": "^4.1.1",
+    "esm": "^3.2.25",
+    "inquirer": "^8.0.0",
+    "ncp": "^2.0.0"
+  }
+}

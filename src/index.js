@@ -1,9 +1,14 @@
-import chalk from 'chalk';
 import fs from 'fs';
 import ncp from 'ncp';
 import path from 'path';
+import chalk from 'chalk';
+import execa from 'execa';
+import Listr from 'listr';
 import { promisify } from 'util';
 import { fileURLToPath } from 'url';
+import { projectInstall } from 'pkg-install';
+
+import { initGit } from './lib/git';
 
 const access = promisify(fs.access);
 const copy = promisify(ncp);
@@ -37,9 +42,31 @@ export async function createProject(options) {
     process.exit(1);
   }
 
-  console.log('Copy project files');
-  await copyTemplateFiles(options);
+  const tasks = new Listr([
+    {
+      title: 'Copy project files',
+      task: () => copyTemplateFiles(options),
+    },
+    {
+      title: 'Initialize git',
+      task: () => initGit(options),
+      enabled: () => options.git,
+    },
+    {
+      title: 'Install dependencies',
+      task: () =>
+        projectInstall({
+          cwd: options.targetDirectory,
+        }),
+      skip: () =>
+        !options.runInstall
+          ? 'Pass --install to automatically install dependencies'
+          : undefined,
+    },
+  ]);
   
+  await tasks.run();
+
   console.log('%s Project ready', chalk.green.bold('DONE'));
   return true;
 }

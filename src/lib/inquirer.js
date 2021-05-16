@@ -8,6 +8,7 @@ function parseArgumentsIntoOptions(rawArgs) {
       '--git': Boolean,
       '--yes': Boolean,
       '--install': Boolean,
+      '--app': String,
       '-g': '--git',
       '-y': '--yes',
       '-i': '--install',
@@ -16,12 +17,13 @@ function parseArgumentsIntoOptions(rawArgs) {
       argv: rawArgs.slice(2),
     }
   );
- 
+
   return {
     skipPrompts: args['--yes'] || false,
     git: args['--git'] || false,
     template: args._[0],
     runInstall: args['--install'] || false,
+    appName: args['--app'] || '',
   };
 }
  
@@ -47,6 +49,21 @@ async function promptForMissingOptions(options) {
     });
   }
  
+  if (!options.appName) {
+    questions.push({
+      type: 'input',
+      name: 'appName',
+      message: 'What is the name of your app?',
+      validate: ( value ) => {
+        if (value.length) {
+          return true;
+        } else {
+          return 'Please enter app name.';
+        }
+      }
+    });
+  }
+
   if (!options.git) {
     questions.push({
       type: 'confirm',
@@ -62,6 +79,7 @@ async function promptForMissingOptions(options) {
     ...options,
     template: options.template || answers.template,
     git: options.git || answers.git,
+    appName: options.appName || answers.appName,
   };
 }
 

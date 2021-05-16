@@ -2,7 +2,6 @@ import fs from 'fs';
 import ncp from 'ncp';
 import path from 'path';
 import chalk from 'chalk';
-import execa from 'execa';
 import Listr from 'listr';
 import { promisify } from 'util';
 import { fileURLToPath } from 'url';
@@ -20,12 +19,12 @@ async function copyTemplateFiles(options) {
 }
 
 export async function createProject(options) {
-  options = {
-    ...options,
-    targetDirectory: options.targetDirectory || process.cwd(),
-  };
-
   const currentFileUrl = import.meta.url;
+
+  options.targetDirectory = path.resolve(
+    options.targetDirectory || process.cwd(), 
+    options.appName
+  );
 
   const templateDir = path.resolve(
     fileURLToPath(currentFileUrl),

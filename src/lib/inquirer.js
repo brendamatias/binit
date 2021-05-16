@@ -8,10 +8,12 @@ function parseArgumentsIntoOptions(rawArgs) {
       '--git': Boolean,
       '--yes': Boolean,
       '--install': Boolean,
+      '--help': Boolean,
       '--app': String,
       '-g': '--git',
       '-y': '--yes',
       '-i': '--install',
+      '-h': '--help',
     },
     {
       argv: rawArgs.slice(2),
@@ -23,6 +25,7 @@ function parseArgumentsIntoOptions(rawArgs) {
     git: args['--git'] || false,
     template: args._[0],
     runInstall: args['--install'] || false,
+    help: args['--help'] || false,
     appName: args['--app'] || '',
   };
 }
